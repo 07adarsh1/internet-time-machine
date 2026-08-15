@@ -21,36 +21,37 @@ export const TimeScrubber: React.FC = () => {
       case 2020:
         return 'bg-[#161b22] text-gray-200 border-t border-b border-gray-800 font-bento';
       case 2026:
-        return 'bg-black/60 text-white border-t border-b border-white/10 backdrop-blur-xl font-future';
+        return 'bg-black/80 text-white border-t border-b border-white/10 backdrop-blur-xl font-future';
     }
   };
 
   return (
-    <div className={`py-4 px-4 transition-all duration-300 ${getScrubberStyles()}`}>
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <div className={`py-2.5 sm:py-3 px-3 sm:px-4 transition-all duration-300 ${getScrubberStyles()}`}>
+      <div className="max-w-6xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
+        
         {/* Navigation Step Arrows */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={prevEra}
             disabled={currentEra === ERAS_ORDER[0]}
-            className="p-1.5 rounded disabled:opacity-30 hover:bg-black/10 active:scale-95 transition"
+            className="p-1 rounded disabled:opacity-30 hover:bg-black/10 active:scale-95 transition"
             title="Previous Era (Left Arrow)"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
-          <span className="text-xs uppercase font-mono tracking-wider font-bold">Timeline Portal</span>
+          
           <button
             onClick={nextEra}
             disabled={currentEra === ERAS_ORDER[ERAS_ORDER.length - 1]}
-            className="p-1.5 rounded disabled:opacity-30 hover:bg-black/10 active:scale-95 transition"
+            className="p-1 rounded disabled:opacity-30 hover:bg-black/10 active:scale-95 transition"
             title="Next Era (Right Arrow)"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
 
-        {/* Era Badges / Steps */}
-        <div className="flex items-center gap-2 md:gap-4 overflow-x-auto max-w-full pb-2 md:pb-0 scrollbar-none">
+        {/* Era Badges (Horizontally scrollable on mobile) */}
+        <div className="flex items-center gap-1.5 sm:gap-3 overflow-x-auto py-1 scrollbar-none">
           {ERAS_ORDER.map((year) => {
             const isActive = currentEra === year;
             const data = ERAS_DATA[year];
@@ -59,10 +60,10 @@ export const TimeScrubber: React.FC = () => {
               <button
                 key={year}
                 onClick={() => setEra(year)}
-                className={`relative px-3 py-1.5 text-xs md:text-sm font-bold transition-all duration-300 rounded whitespace-nowrap ${
+                className={`relative px-2.5 sm:px-3 py-1 text-xs md:text-sm font-bold transition-all duration-300 rounded whitespace-nowrap ${
                   isActive
-                    ? 'scale-110 shadow-lg ring-2 ring-offset-2 ring-indigo-500'
-                    : 'opacity-60 hover:opacity-100 hover:scale-105'
+                    ? 'scale-105 shadow-md ring-2 ring-indigo-500 font-black'
+                    : 'opacity-60 hover:opacity-100'
                 }`}
                 style={{
                   backgroundColor: isActive ? data.vibeColor : undefined,
@@ -70,19 +71,13 @@ export const TimeScrubber: React.FC = () => {
                 }}
               >
                 {year}
-                {isActive && (
-                  <span className="absolute -top-2 -right-1 flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                  </span>
-                )}
               </button>
             );
           })}
         </div>
 
-        {/* Era Paradigm Tag */}
-        <div className="text-xs font-mono opacity-80 text-center md:text-right">
+        {/* Current Year Paradigm (Hidden on small mobile) */}
+        <div className="hidden md:block text-xs font-mono opacity-80 text-right shrink-0">
           <strong>Paradigm:</strong> {ERAS_DATA[currentEra].paradigm}
         </div>
       </div>

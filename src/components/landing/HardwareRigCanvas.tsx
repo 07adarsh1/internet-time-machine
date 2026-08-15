@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { useTimeMachine } from '../../context/TimeMachineContext';
-import { ERAS_ORDER, ERAS_DATA } from '../../data/erasData';
 
 export const HardwareRigCanvas: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -25,13 +24,16 @@ export const HardwareRigCanvas: React.FC = () => {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x0c0c0e);
 
+    const isMobile = window.innerWidth < 768;
+    const initialCamZ = isMobile ? 5.2 : 4.2;
+
     const camera = new THREE.PerspectiveCamera(
-      45,
+      isMobile ? 50 : 45,
       container.clientWidth / container.clientHeight,
       0.1,
       100
     );
-    camera.position.set(0, 0.4, 4.2);
+    camera.position.set(0, 0.35, initialCamZ);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setSize(container.clientWidth, container.clientHeight);
@@ -73,7 +75,7 @@ export const HardwareRigCanvas: React.FC = () => {
     desk.receiveShadow = true;
     scene.add(desk);
 
-    // --- Dynamic Screen Offscreen Canvas ---
+    // --- Dynamic Screen Canvas ---
     const screenCanvas = document.createElement('canvas');
     screenCanvas.width = 512;
     screenCanvas.height = 384;
@@ -86,16 +88,14 @@ export const HardwareRigCanvas: React.FC = () => {
       const w = screenCanvas.width;
       const h = screenCanvas.height;
 
-      // Era colors and snapshots
       if (t < 0.8) {
-        // 1995: Grey Netscape raw HTML
         screenCtx.fillStyle = '#c0c0c0';
         screenCtx.fillRect(0, 0, w, h);
         screenCtx.fillStyle = '#000080';
         screenCtx.fillRect(10, 10, w - 20, 30);
         screenCtx.fillStyle = '#ffffff';
         screenCtx.font = 'bold 16px serif';
-        screenCtx.fillText('Netscape Navigator - [Welcome to Web 1995]', 20, 32);
+        screenCtx.fillText('Netscape Navigator - [Web 1995]', 20, 32);
 
         screenCtx.fillStyle = '#0000ff';
         screenCtx.font = 'bold 24px serif';
@@ -106,13 +106,11 @@ export const HardwareRigCanvas: React.FC = () => {
         screenCtx.fillText('• Dial-up 28.8k baud rate connected', 30, 140);
         screenCtx.fillText('• Hit Counter: [ 0042891 ]', 30, 170);
 
-        // Scanlines
         screenCtx.fillStyle = 'rgba(0,0,0,0.15)';
         for (let y = 0; y < h; y += 4) {
           screenCtx.fillRect(0, y, w, 2);
         }
       } else if (t < 1.8) {
-        // 2000: Dot-com & Flash
         screenCtx.fillStyle = '#000033';
         screenCtx.fillRect(0, 0, w, h);
         screenCtx.fillStyle = '#ff007f';
@@ -123,23 +121,21 @@ export const HardwareRigCanvas: React.FC = () => {
         screenCtx.fillText('>>> PETS.COM IPO SOARS! <<<', 40, 110);
         screenCtx.fillText('ICQ Status: Online (Winamp Playing)', 40, 140);
         screenCtx.fillStyle = '#00ffff';
-        screenCtx.fillText('[ Enter Animated Cyber-Zone ]', 40, 180);
+        screenCtx.fillText('[ Enter Cyber-Zone ]', 40, 180);
       } else if (t < 2.8) {
-        // 2005: Web 2.0 MSN / MySpace
         screenCtx.fillStyle = '#e3f2fd';
         screenCtx.fillRect(0, 0, w, h);
         screenCtx.fillStyle = '#0288d1';
         screenCtx.fillRect(0, 0, w, 40);
         screenCtx.fillStyle = '#ffffff';
         screenCtx.font = 'bold 18px Tahoma, sans-serif';
-        screenCtx.fillText('MSN Messenger 7.5 & MySpace Music', 20, 26);
+        screenCtx.fillText('MSN Messenger 7.5 & MySpace', 20, 26);
         screenCtx.fillStyle = '#0d47a1';
         screenCtx.font = 'bold 15px Tahoma, sans-serif';
-        screenCtx.fillText('xX_Sk8erBoi_Xx: brb mom needs phone line!', 25, 80);
+        screenCtx.fillText('xX_Sk8erBoi_Xx: brb mom on phone!', 25, 80);
         screenCtx.fillStyle = '#d32f2f';
         screenCtx.fillText('💥 Nudge received at 4:16 PM', 25, 115);
       } else if (t < 3.8) {
-        // 2010: Skeuomorphic iOS 4
         screenCtx.fillStyle = '#2c3e50';
         screenCtx.fillRect(0, 0, w, h);
         screenCtx.fillStyle = '#3b5998';
@@ -149,10 +145,9 @@ export const HardwareRigCanvas: React.FC = () => {
         screenCtx.fillText('Facebook for iOS • Retina Display', 35, 52);
         screenCtx.fillStyle = '#ecf0f1';
         screenCtx.font = '14px Helvetica, sans-serif';
-        screenCtx.fillText('Checked in at Apple Campus (Cupertino, CA)', 35, 105);
+        screenCtx.fillText('Checked in at Apple Campus (Cupertino)', 35, 105);
         screenCtx.fillText('👍 Like (42) • Slide to Unlock ➔', 35, 140);
       } else if (t < 4.8) {
-        // 2015: Flat Material & Vine
         screenCtx.fillStyle = '#f5f5f5';
         screenCtx.fillRect(0, 0, w, h);
         screenCtx.fillStyle = '#009688';
@@ -164,9 +159,8 @@ export const HardwareRigCanvas: React.FC = () => {
         screenCtx.fillRect(30, 75, w - 60, 90);
         screenCtx.fillStyle = '#ffffff';
         screenCtx.font = 'bold 16px Roboto, sans-serif';
-        screenCtx.fillText('🍇 Do it for the Vine! (6.0s Looping)', 45, 125);
+        screenCtx.fillText('🍇 Do it for the Vine! (6.0s)', 45, 125);
       } else if (t < 5.5) {
-        // 2020: Dark Bento & Discord
         screenCtx.fillStyle = '#0d1117';
         screenCtx.fillRect(0, 0, w, h);
         screenCtx.fillStyle = '#161b22';
@@ -179,7 +173,6 @@ export const HardwareRigCanvas: React.FC = () => {
         screenCtx.fillText('🎧 Lo-Fi Beats Stream • 48k Listening', 35, 115);
         screenCtx.fillText('Zoom Standup: "You are on mute!"', 35, 145);
       } else {
-        // 2026: Spatial AI
         screenCtx.fillStyle = '#050508';
         screenCtx.fillRect(0, 0, w, h);
         const grad = screenCtx.createLinearGradient(0, 0, w, 0);
@@ -190,18 +183,17 @@ export const HardwareRigCanvas: React.FC = () => {
         screenCtx.fillText('✨ Ambient Neural Canvas 2026', 30, 60);
         screenCtx.fillStyle = '#a1a1aa';
         screenCtx.font = '14px system-ui, sans-serif';
-        screenCtx.fillText('Copilot Agent: Synthesizing Dynamic UI Viewport', 30, 100);
+        screenCtx.fillText('Copilot Agent: Dynamic UI Viewport', 30, 100);
         screenCtx.fillText('Spatial Synapse: 0.2ms Direct Latency', 30, 130);
       }
 
       screenTexture.needsUpdate = true;
     };
 
-    // --- Main Hardware Rig 3D Meshes ---
+    // --- Main Hardware Rig Meshes ---
     const rigGroup = new THREE.Group();
     scene.add(rigGroup);
 
-    // 1. Chassis Body (Depth and Shape Morphs)
     const chassisGeo = new THREE.BoxGeometry(1.8, 1.4, 1.0);
     const chassisMat = new THREE.MeshStandardMaterial({
       color: 0xd8d2c4,
@@ -213,7 +205,6 @@ export const HardwareRigCanvas: React.FC = () => {
     chassisMesh.receiveShadow = true;
     rigGroup.add(chassisMesh);
 
-    // 2. Bezel Frame Face
     const bezelGeo = new THREE.BoxGeometry(1.82, 1.42, 0.1);
     const bezelMat = new THREE.MeshStandardMaterial({
       color: 0xc8c2b4,
@@ -223,7 +214,6 @@ export const HardwareRigCanvas: React.FC = () => {
     bezelMesh.position.z = 0.46;
     rigGroup.add(bezelMesh);
 
-    // 3. Screen Display Plane
     const screenGeo = new THREE.PlaneGeometry(1.42, 1.06);
     const screenMat = new THREE.MeshBasicMaterial({
       map: screenTexture,
@@ -232,7 +222,6 @@ export const HardwareRigCanvas: React.FC = () => {
     screenMesh.position.z = 0.52;
     rigGroup.add(screenMesh);
 
-    // 4. Stand / Swivel Pedestal
     const standGeo = new THREE.CylinderGeometry(0.3, 0.45, 0.25, 32);
     const standMat = new THREE.MeshStandardMaterial({
       color: 0x908c82,
@@ -243,7 +232,6 @@ export const HardwareRigCanvas: React.FC = () => {
     standMesh.castShadow = true;
     rigGroup.add(standMesh);
 
-    // 5. Hardware Details: Power Button & Floppy Slot
     const buttonGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.05, 16);
     const buttonMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
     const powerButton = new THREE.Mesh(buttonGeo, buttonMat);
@@ -259,11 +247,10 @@ export const HardwareRigCanvas: React.FC = () => {
 
     // --- Secondary Physical Media Props ---
     const propGroup = new THREE.Group();
-    propGroup.position.set(1.4, -0.9, 0.4);
+    propGroup.position.set(isMobile ? 1.0 : 1.4, -0.9, 0.4);
     scene.add(propGroup);
 
-    // Floppy Mesh (1995)
-    const floppyGeo = new THREE.BoxGeometry(0.6, 0.6, 0.04);
+    const floppyGeo = new THREE.BoxGeometry(0.55, 0.55, 0.04);
     const floppyMat = new THREE.MeshStandardMaterial({ color: 0x1a1a24, roughness: 0.5 });
     const floppyMesh = new THREE.Mesh(floppyGeo, floppyMat);
     floppyMesh.rotation.x = -Math.PI / 2;
@@ -271,8 +258,7 @@ export const HardwareRigCanvas: React.FC = () => {
     floppyMesh.castShadow = true;
     propGroup.add(floppyMesh);
 
-    // CD Jewel Case (2000)
-    const cdGeo = new THREE.BoxGeometry(0.65, 0.65, 0.05);
+    const cdGeo = new THREE.BoxGeometry(0.6, 0.6, 0.05);
     const cdMat = new THREE.MeshStandardMaterial({
       color: 0x0088cc,
       roughness: 0.1,
@@ -287,7 +273,6 @@ export const HardwareRigCanvas: React.FC = () => {
     cdMesh.visible = false;
     propGroup.add(cdMesh);
 
-    // Micro-SIM / Modern Puck (2010+)
     const puckGeo = new THREE.CylinderGeometry(0.25, 0.25, 0.03, 32);
     const puckMat = new THREE.MeshStandardMaterial({ color: 0xe0e0e0, metalness: 0.9, roughness: 0.2 });
     const puckMesh = new THREE.Mesh(puckGeo, puckMat);
@@ -295,7 +280,7 @@ export const HardwareRigCanvas: React.FC = () => {
     puckMesh.visible = false;
     propGroup.add(puckMesh);
 
-    // --- Mouse Parallax Tracking ---
+    // --- Mouse & Touch Parallax Tracking ---
     let mouseX = 0;
     let mouseY = 0;
     let targetRotationX = 0;
@@ -309,11 +294,25 @@ export const HardwareRigCanvas: React.FC = () => {
       mouseY = y;
     };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        const rect = container.getBoundingClientRect();
+        const x = (touch.clientX - rect.left) / rect.width - 0.5;
+        const y = (touch.clientY - rect.top) / rect.height - 0.5;
+        mouseX = x * 1.4;
+        mouseY = y * 1.4;
+      }
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
 
     // --- Resize Observer ---
     const handleResize = () => {
       if (!container) return;
+      const mobile = window.innerWidth < 768;
+      camera.fov = mobile ? 50 : 45;
       camera.aspect = container.clientWidth / container.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);
@@ -327,23 +326,20 @@ export const HardwareRigCanvas: React.FC = () => {
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
-      // Smooth interpolation of continuous scrub index
       const targetT = continuousIndexRef.current;
       currentT += (targetT - currentT) * 0.08;
 
-      // 1. Morph Chassis Depth & Scale
+      // 1. Morph Chassis Depth & Position
       const depthFactor = THREE.MathUtils.lerp(0.85, 0.03, currentT / 6);
       chassisMesh.scale.set(1.0, 1.0, depthFactor);
       chassisMesh.position.z = (depthFactor - 1.0) * 0.4;
       bezelMesh.position.z = chassisMesh.position.z + 0.5 * depthFactor + 0.04;
       screenMesh.position.z = bezelMesh.position.z + 0.055;
 
-      // Stand scale
       const standScale = THREE.MathUtils.lerp(1.0, 0.25, currentT / 6);
       standMesh.scale.set(standScale, standScale, standScale);
       standMesh.position.y = -0.7 - (1 - standScale) * 0.15;
 
-      // Details visibility: scale down button/slot in modern eras
       const detailScale = THREE.MathUtils.clamp(1.0 - currentT / 2.5, 0.001, 1.0);
       powerButton.scale.set(detailScale, detailScale, detailScale);
       floppySlot.scale.set(detailScale, detailScale, detailScale);
@@ -352,7 +348,6 @@ export const HardwareRigCanvas: React.FC = () => {
 
       // 2. Morph Materials
       if (currentT < 1.5) {
-        // 1995-2000: Beige to Bondi
         const factor = currentT / 1.5;
         chassisMat.color.setRGB(
           THREE.MathUtils.lerp(0.85, 0.0, factor),
@@ -362,7 +357,6 @@ export const HardwareRigCanvas: React.FC = () => {
         chassisMat.roughness = THREE.MathUtils.lerp(0.85, 0.3, factor);
         bezelMat.color.copy(chassisMat.color);
       } else if (currentT < 3.5) {
-        // 2005-2010: Bondi to Brushed Aluminum
         const factor = (currentT - 1.5) / 2.0;
         chassisMat.color.setRGB(
           THREE.MathUtils.lerp(0.0, 0.88, factor),
@@ -373,7 +367,6 @@ export const HardwareRigCanvas: React.FC = () => {
         chassisMat.roughness = THREE.MathUtils.lerp(0.3, 0.25, factor);
         bezelMat.color.copy(chassisMat.color);
       } else {
-        // 2015-2026: Aluminum to Obsidian Glass
         const factor = (currentT - 3.5) / 2.5;
         chassisMat.color.setRGB(
           THREE.MathUtils.lerp(0.88, 0.05, factor),
@@ -385,27 +378,26 @@ export const HardwareRigCanvas: React.FC = () => {
         bezelMat.color.copy(chassisMat.color);
       }
 
-      // 3. Morph Secondary Props
       floppyMesh.visible = currentT < 1.5;
       cdMesh.visible = currentT >= 1.5 && currentT < 3.5;
       puckMesh.visible = currentT >= 3.5;
 
-      // 4. Update Screen Content
       drawScreenContent(currentT);
 
-      // 5. Parallax Mouse Tilt
       targetRotationY = mouseX * 0.45;
       targetRotationX = -mouseY * 0.3;
       rigGroup.rotation.y += (targetRotationY - rigGroup.rotation.y) * 0.06;
       rigGroup.rotation.x += (targetRotationX - rigGroup.rotation.x) * 0.06;
 
-      // 6. Boot Camera Dive Animation
+      const mobile = window.innerWidth < 768;
+      const targetBaseZ = mobile ? 5.2 : 4.2;
+
       if (isBootingRef.current) {
-        camera.position.z += (1.4 - camera.position.z) * 0.08;
+        camera.position.z += (1.3 - camera.position.z) * 0.08;
         camera.position.y += (0.05 - camera.position.y) * 0.08;
       } else {
-        camera.position.z += (4.2 - camera.position.z) * 0.05;
-        camera.position.y += (0.4 - camera.position.y) * 0.05;
+        camera.position.z += (targetBaseZ - camera.position.z) * 0.05;
+        camera.position.y += (0.35 - camera.position.y) * 0.05;
       }
 
       renderer.render(scene, camera);
@@ -413,10 +405,10 @@ export const HardwareRigCanvas: React.FC = () => {
 
     animate();
 
-    // Clean up
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('resize', handleResize);
       if (container && renderer.domElement) {
         container.removeChild(renderer.domElement);
@@ -428,12 +420,11 @@ export const HardwareRigCanvas: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[58vh] md:h-[65vh] cursor-grab active:cursor-grabbing"
+      className="relative w-full h-[48vh] sm:h-[55vh] md:h-[62vh] cursor-grab active:cursor-grabbing touch-none select-none"
       onClick={() => {
-        // Clicking rig triggers boot
         if (!isBooting) bootEra();
       }}
-      title="Click device or 'Turn On' to boot this internet era"
+      title="Tap or click to boot this internet era"
     />
   );
 };
