@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTimeMachine } from '../../context/TimeMachineContext';
 import { ERAS_DATA } from '../../data/erasData';
-import { Volume2, VolumeX, Tv, Wifi, Sparkles, Skull, Play, Pause, Monitor } from 'lucide-react';
+import { Volume2, VolumeX, Tv, Wifi, Sparkles, Skull, Play, Pause, Monitor, Code2, Disc, Radio } from 'lucide-react';
 
 export const MorphingNavbar: React.FC = () => {
   const {
@@ -17,6 +17,9 @@ export const MorphingNavbar: React.FC = () => {
     toggleAutoPlay,
     setOpenGraveyard,
     setOpenSurprise,
+    setOpenDevTools,
+    setOpenTimeCapsule,
+    setOpenAudioVault,
   } = useTimeMachine();
 
   const eraInfo = ERAS_DATA[currentEra];
@@ -62,7 +65,8 @@ export const MorphingNavbar: React.FC = () => {
   return (
     <header className={`sticky top-0 z-40 px-4 py-3 transition-colors duration-500 ${getNavStyles()}`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
-        {/* Brand & Return to 3D Rig Button */}
+        
+        {/* Brand & 3D Rig Home Button */}
         <div className="flex items-center gap-3">
           <button
             onClick={returnToLanding}
@@ -73,7 +77,7 @@ export const MorphingNavbar: React.FC = () => {
             <span>3D Rig Studio</span>
           </button>
 
-          <div>
+          <div className="hidden lg:block">
             <h1 className="text-xs md:text-sm font-black tracking-tight leading-none">
               YEAR {currentEra} — {eraInfo.title}
             </h1>
@@ -83,37 +87,74 @@ export const MorphingNavbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Global Controls */}
+        {/* Tools & Modals Navigation */}
         <div className="flex items-center gap-2">
+          {/* DevTools Source Inspector Button */}
+          <button
+            onClick={() => setOpenDevTools(true)}
+            className={getButtonClass()}
+            title="Inspect Era Source Code"
+          >
+            <Code2 className="w-3.5 h-3.5 inline mr-1 text-blue-400" />
+            <span className="hidden sm:inline">View Source</span>
+          </button>
+
+          {/* Time Capsule Generator Button */}
+          <button
+            onClick={() => setOpenTimeCapsule(true)}
+            className={getButtonClass()}
+            title="Generate Vintage Time Capsule Passport"
+          >
+            <Disc className="w-3.5 h-3.5 inline mr-1 text-amber-400" />
+            <span className="hidden sm:inline">ID Capsule</span>
+          </button>
+
+          {/* Dead Web Audio Vault Button */}
+          <button
+            onClick={() => setOpenAudioVault(true)}
+            className={getButtonClass()}
+            title="Open Dead Web Audio Vault"
+          >
+            <Radio className="w-3.5 h-3.5 inline mr-1 text-emerald-400" />
+            <span className="hidden sm:inline">Audio Vault</span>
+          </button>
+
+          {/* Graveyard Button */}
           <button onClick={() => setOpenGraveyard(true)} className={getButtonClass()}>
             <Skull className="w-3.5 h-3.5 inline mr-1" />
-            <span className="hidden sm:inline">Graveyard</span>
+            <span className="hidden md:inline">Graveyard</span>
           </button>
 
+          {/* Surprise Me Roulette */}
           <button onClick={() => setOpenSurprise(true)} className={getButtonClass()}>
             <Sparkles className="w-3.5 h-3.5 inline mr-1" />
-            <span className="hidden sm:inline">Surprise Me</span>
+            <span className="hidden md:inline">Surprise</span>
           </button>
 
+          {/* Dial-Up Toggle */}
           <button onClick={toggleDialUpMode} className={`${getButtonClass()} ${isDialUpMode ? 'ring-2 ring-amber-400 font-bold' : 'opacity-70'}`}>
             <Wifi className="w-3.5 h-3.5 inline mr-1" />
-            <span className="hidden md:inline">56k Dial-Up</span>
+            <span className="hidden xl:inline">56k Dial-Up</span>
           </button>
 
+          {/* CRT Shaders Toggle */}
           <button onClick={toggleCRTMode} className={`${getButtonClass()} ${isCRTMode ? 'ring-2 ring-emerald-400 font-bold' : 'opacity-70'}`}>
             <Tv className="w-3.5 h-3.5 inline mr-1" />
-            <span className="hidden md:inline">CRT Mode</span>
+            <span className="hidden xl:inline">CRT Mode</span>
           </button>
 
+          {/* Auto Evolve */}
           <button onClick={toggleAutoPlay} className={`${getButtonClass()} ${isAutoPlaying ? 'bg-amber-600 text-white' : ''}`}>
             {isAutoPlaying ? <Pause className="w-3.5 h-3.5 inline mr-1" /> : <Play className="w-3.5 h-3.5 inline mr-1" />}
-            <span className="hidden sm:inline">{isAutoPlaying ? 'Pause' : 'Auto Evolve'}</span>
+            <span className="hidden sm:inline">{isAutoPlaying ? 'Pause' : 'Auto'}</span>
           </button>
 
+          {/* Sound Toggle */}
           <button onClick={toggleMute} className={getButtonClass()}>
             {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
           </button>
         </div>
+
       </div>
     </header>
   );

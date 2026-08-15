@@ -7,6 +7,9 @@ import { CursorTrail } from './components/chrome/CursorTrail';
 import { TimeScrubber } from './components/timeline/TimeScrubber';
 import { GraveyardModal } from './components/graveyard/GraveyardModal';
 import { SurpriseModal } from './components/surprise/SurpriseModal';
+import { DevToolsModal } from './components/devtools/DevToolsModal';
+import { TimeCapsuleModal } from './components/capsule/TimeCapsuleModal';
+import { AudioVaultModal } from './components/audiovault/AudioVaultModal';
 
 // Era Views
 import { Era1995 } from './components/eras/Era1995';
@@ -20,18 +23,19 @@ import { Era2026 } from './components/eras/Era2026';
 const MainPortal: React.FC = () => {
   const { viewMode, currentEra } = useTimeMachine();
 
-  // If on landing page, display the 3D Morphing Hardware Rig experience
   if (viewMode === 'landing') {
     return (
       <>
         <LandingPage />
         <GraveyardModal />
         <SurpriseModal />
+        <DevToolsModal />
+        <TimeCapsuleModal />
+        <AudioVaultModal />
       </>
     );
   }
 
-  // Otherwise, render the active era playground
   const renderActiveEra = () => {
     switch (currentEra) {
       case 1995:
@@ -66,6 +70,9 @@ const MainPortal: React.FC = () => {
       <CursorTrail />
       <GraveyardModal />
       <SurpriseModal />
+      <DevToolsModal />
+      <TimeCapsuleModal />
+      <AudioVaultModal />
     </div>
   );
 };

@@ -21,15 +21,14 @@ class AudioEngine {
     return this.muted;
   }
 
-  // CRT Degauss & Power-On Clack
+  // --- Core Mechanical Audio ---
+
   public playPowerOnDegauss() {
     if (this.muted) return;
     this.init();
     if (!this.ctx) return;
 
     const now = this.ctx.currentTime;
-    
-    // Mechanical Switch Clack
     const switchOsc = this.ctx.createOscillator();
     const switchGain = this.ctx.createGain();
     switchOsc.type = 'square';
@@ -42,7 +41,6 @@ class AudioEngine {
     switchOsc.start(now);
     switchOsc.stop(now + 0.05);
 
-    // Deep Degauss Coil Buzz (low-frequency wobble)
     const degaussOsc = this.ctx.createOscillator();
     const degaussGain = this.ctx.createGain();
     degaussOsc.type = 'sawtooth';
@@ -56,7 +54,6 @@ class AudioEngine {
     degaussOsc.stop(now + 0.6);
   }
 
-  // Hardware Scrubber Dial Tick
   public playDialTick(pitch: number = 800) {
     if (this.muted) return;
     this.init();
@@ -78,7 +75,6 @@ class AudioEngine {
     osc.stop(now + 0.02);
   }
 
-  // Mechanical Click
   public playRetroClick() {
     if (this.muted) return;
     this.init();
@@ -99,7 +95,6 @@ class AudioEngine {
     osc.stop(this.ctx.currentTime + 0.04);
   }
 
-  // 2000 Dial-up burst
   public playDialUp() {
     if (this.muted) return;
     this.init();
@@ -130,7 +125,6 @@ class AudioEngine {
     osc2.stop(now + 0.5);
   }
 
-  // 2005 MSN Nudge
   public playMsnNudge() {
     if (this.muted) return;
     this.init();
@@ -154,7 +148,6 @@ class AudioEngine {
     });
   }
 
-  // 2010 Camera Click
   public playCameraClick() {
     if (this.muted) return;
     this.init();
@@ -176,7 +169,6 @@ class AudioEngine {
     osc.stop(now + 0.08);
   }
 
-  // 2015 Flat Pop
   public playMaterialPop() {
     if (this.muted) return;
     this.init();
@@ -198,7 +190,6 @@ class AudioEngine {
     osc.stop(now + 0.06);
   }
 
-  // 2026 Spatial Glow
   public playSpatialGlow() {
     if (this.muted) return;
     this.init();
@@ -222,7 +213,6 @@ class AudioEngine {
     });
   }
 
-  // Respect Chime
   public playRespectChime() {
     if (this.muted) return;
     this.init();
@@ -241,6 +231,155 @@ class AudioEngine {
     gain.connect(this.ctx.destination);
     osc.start(now);
     osc.stop(now + 1.2);
+  }
+
+  // --- Dead Web Audio Vault Synthesizers ---
+
+  // AOL Mail Fanfare
+  public playAOLMail() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const notes = [392, 523.25, 659.25, 783.99]; // G4, C5, E5, G5
+    notes.forEach((f, i) => {
+      const osc = this.ctx!.createOscillator();
+      const gain = this.ctx!.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(f, now + i * 0.1);
+      gain.gain.setValueAtTime(0.25, now + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.25);
+      osc.connect(gain);
+      gain.connect(this.ctx!.destination);
+      osc.start(now + i * 0.1);
+      osc.stop(now + i * 0.1 + 0.25);
+    });
+  }
+
+  // ICQ "Uh-Oh!" Horn
+  public playICQUhOh() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    // "Uh" (High tone)
+    const osc1 = this.ctx.createOscillator();
+    const gain1 = this.ctx.createGain();
+    osc1.type = 'sawtooth';
+    osc1.frequency.setValueAtTime(587.33, now); // D5
+    gain1.gain.setValueAtTime(0.25, now);
+    gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+    osc1.connect(gain1);
+    gain1.connect(this.ctx.destination);
+    osc1.start(now);
+    osc1.stop(now + 0.12);
+
+    // "Oh!" (Low tone)
+    const osc2 = this.ctx.createOscillator();
+    const gain2 = this.ctx.createGain();
+    osc2.type = 'sawtooth';
+    osc2.frequency.setValueAtTime(392.00, now + 0.14); // G4
+    gain2.gain.setValueAtTime(0.3, now + 0.14);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+    osc2.connect(gain2);
+    gain2.connect(this.ctx.destination);
+    osc2.start(now + 0.14);
+    osc2.stop(now + 0.35);
+  }
+
+  // Windows 95 Ambient Arpeggio
+  public playWin95Sound() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const notes = [261.63, 329.63, 392.0, 523.25, 659.25, 783.99, 1046.5];
+    notes.forEach((freq, idx) => {
+      const osc = this.ctx!.createOscillator();
+      const gain = this.ctx!.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+      gain.gain.setValueAtTime(0.18, now + idx * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.12 + 1.8);
+      osc.connect(gain);
+      gain.connect(this.ctx!.destination);
+      osc.start(now + idx * 0.12);
+      osc.stop(now + idx * 0.12 + 1.8);
+    });
+  }
+
+  // Windows XP 4-Chord Fanfare
+  public playWinXPSound() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const chords = [
+      [311.13, 466.16], // Eb4, Bb4
+      [392.00, 587.33], // G4, D5
+      [466.16, 698.46], // Bb4, F5
+      [622.25, 932.33]  // Eb5, Bb5
+    ];
+    chords.forEach((chord, idx) => {
+      chord.forEach(freq => {
+        const osc = this.ctx!.createOscillator();
+        const gain = this.ctx!.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.22);
+        gain.gain.setValueAtTime(0.2, now + idx * 0.22);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.22 + 1.2);
+        osc.connect(gain);
+        gain.connect(this.ctx!.destination);
+        osc.start(now + idx * 0.22);
+        osc.stop(now + idx * 0.22 + 1.2);
+      });
+    });
+  }
+
+  // Skype Incoming Marimba
+  public playSkypeRing() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const notes = [659.25, 783.99, 659.25, 987.77];
+    notes.forEach((freq, idx) => {
+      const osc = this.ctx!.createOscillator();
+      const gain = this.ctx!.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now + idx * 0.09);
+      gain.gain.setValueAtTime(0.25, now + idx * 0.09);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.15);
+      osc.connect(gain);
+      gain.connect(this.ctx!.destination);
+      osc.start(now + idx * 0.09);
+      osc.stop(now + idx * 0.09 + 0.15);
+    });
+  }
+
+  // iPod Piezo Click
+  public playIpodClick() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(2200, now);
+    osc.frequency.exponentialRampToValueAtTime(400, now + 0.015);
+    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.015);
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.015);
   }
 }
 

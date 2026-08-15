@@ -2,7 +2,7 @@ import React from 'react';
 import { useTimeMachine } from '../../context/TimeMachineContext';
 import { ERAS_ORDER, ERAS_DATA } from '../../data/erasData';
 import { HardwareRigCanvas } from './HardwareRigCanvas';
-import { Power, Skull, Sparkles, Volume2, VolumeX, ArrowRight, Disc, HardDrive, Cpu } from 'lucide-react';
+import { Power, Skull, Sparkles, Volume2, VolumeX, ArrowRight, Disc, HardDrive, Cpu, Code2, Radio } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
   const {
@@ -12,6 +12,9 @@ export const LandingPage: React.FC = () => {
     bootEra,
     setOpenGraveyard,
     setOpenSurprise,
+    setOpenDevTools,
+    setOpenTimeCapsule,
+    setOpenAudioVault,
     isMuted,
     toggleMute,
     isBooting,
@@ -37,22 +40,49 @@ export const LandingPage: React.FC = () => {
           </h1>
         </div>
 
-        {/* Supporting Controls */}
+        {/* Feature Launchers */}
         <div className="flex items-center gap-2">
           <button
+            onClick={() => setOpenDevTools(true)}
+            className="px-3 py-1.5 rounded-lg text-xs bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 transition flex items-center gap-1.5"
+            title="Inspect Historical Source Code"
+          >
+            <Code2 className="w-3.5 h-3.5 text-blue-400" />
+            <span className="hidden sm:inline">View Source</span>
+          </button>
+
+          <button
+            onClick={() => setOpenTimeCapsule(true)}
+            className="px-3 py-1.5 rounded-lg text-xs bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 transition flex items-center gap-1.5"
+            title="Export Vintage ID Card"
+          >
+            <Disc className="w-3.5 h-3.5 text-amber-400" />
+            <span className="hidden sm:inline">ID Capsule</span>
+          </button>
+
+          <button
+            onClick={() => setOpenAudioVault(true)}
+            className="px-3 py-1.5 rounded-lg text-xs bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 transition flex items-center gap-1.5"
+            title="Dead Web Soundboard"
+          >
+            <Radio className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="hidden sm:inline">Audio Vault</span>
+          </button>
+
+          <button
             onClick={() => setOpenGraveyard(true)}
-            className="px-3.5 py-1.5 rounded-lg text-xs bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 transition flex items-center gap-1.5"
+            className="px-3 py-1.5 rounded-lg text-xs bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 transition flex items-center gap-1.5"
           >
             <Skull className="w-3.5 h-3.5 text-purple-400" />
-            <span className="hidden sm:inline">Graveyard</span>
+            <span className="hidden md:inline">Graveyard</span>
           </button>
 
           <button
             onClick={() => setOpenSurprise(true)}
-            className="px-3.5 py-1.5 rounded-lg text-xs bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 transition flex items-center gap-1.5"
+            className="px-3 py-1.5 rounded-lg text-xs bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 transition flex items-center gap-1.5"
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span className="hidden sm:inline">Surprise Me</span>
+            <span className="hidden md:inline">Surprise Me</span>
           </button>
 
           <button
@@ -64,13 +94,11 @@ export const LandingPage: React.FC = () => {
         </div>
       </header>
 
-      {/* 2. Main 3D Hardware Canvas + Editorial Telemetry */}
+      {/* 2. Main 3D Canvas + Telemetry */}
       <main className="relative flex-1 flex flex-col items-center justify-center px-4">
-        
-        {/* 3D Hardware Viewport */}
         <HardwareRigCanvas />
 
-        {/* Boot Overlay Trigger Button */}
+        {/* Boot Trigger Button */}
         <div className="mt-[-20px] z-10 text-center space-y-3">
           <button
             onClick={() => bootEra()}
@@ -87,7 +115,7 @@ export const LandingPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Hardware Specs Floating Telemetry */}
+        {/* Hardware Specs Grid */}
         <div className="max-w-4xl w-full grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 text-xs font-mono">
           <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
             <span className="text-gray-500 block text-[10px]">CHASSIS & ARCHITECTURE</span>
@@ -118,10 +146,9 @@ export const LandingPage: React.FC = () => {
         </div>
       </main>
 
-      {/* 3. The Continuous Hardware Timeline Scrubber */}
+      {/* 3. Continuous Timeline Scrubber */}
       <footer className="bg-[#111114] border-t border-white/10 px-6 py-5 z-20">
         <div className="max-w-5xl mx-auto space-y-3">
-          
           <div className="flex items-center justify-between text-xs font-mono text-gray-400">
             <span className="flex items-center gap-1.5">
               <Cpu className="w-3.5 h-3.5 text-amber-400" />
@@ -132,7 +159,6 @@ export const LandingPage: React.FC = () => {
             </span>
           </div>
 
-          {/* Continuous Range Slider */}
           <div className="relative py-1">
             <input
               type="range"
@@ -145,7 +171,6 @@ export const LandingPage: React.FC = () => {
             />
           </div>
 
-          {/* Era Step Labels */}
           <div className="flex justify-between items-center text-xs font-mono">
             {ERAS_ORDER.map((year, idx) => {
               const isActive = Math.round(continuousIndex) === idx;
@@ -164,7 +189,6 @@ export const LandingPage: React.FC = () => {
               );
             })}
           </div>
-
         </div>
       </footer>
 

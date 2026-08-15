@@ -30,6 +30,12 @@ interface TimeMachineContextType {
   setOpenGraveyard: (open: boolean) => void;
   openSurprise: boolean;
   setOpenSurprise: (open: boolean) => void;
+  openDevTools: boolean;
+  setOpenDevTools: (open: boolean) => void;
+  openTimeCapsule: boolean;
+  setOpenTimeCapsule: (open: boolean) => void;
+  openAudioVault: boolean;
+  setOpenAudioVault: (open: boolean) => void;
 }
 
 const TimeMachineContext = createContext<TimeMachineContextType | undefined>(undefined);
@@ -46,8 +52,10 @@ export const TimeMachineProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [isBooting, setIsBooting] = useState<boolean>(false);
   const [openGraveyard, setOpenGraveyard] = useState<boolean>(false);
   const [openSurprise, setOpenSurprise] = useState<boolean>(false);
+  const [openDevTools, setOpenDevTools] = useState<boolean>(false);
+  const [openTimeCapsule, setOpenTimeCapsule] = useState<boolean>(false);
+  const [openAudioVault, setOpenAudioVault] = useState<boolean>(false);
 
-  // Set continuous scrub index (0.0 to 6.0)
   const setContinuousIndex = useCallback((idx: number) => {
     const clamped = Math.max(0, Math.min(ERAS_ORDER.length - 1, idx));
     setContinuousIndexState(clamped);
@@ -80,7 +88,6 @@ export const TimeMachineProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }, isDialUpMode ? 1200 : 250);
   }, [currentEra, isDialUpMode]);
 
-  // Boot sequence: camera dive into screen
   const bootEra = useCallback((year?: EraYear) => {
     const target = year || currentEra;
     sound.playPowerOnDegauss();
@@ -112,7 +119,6 @@ export const TimeMachineProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   }, [currentEra, setEra]);
 
-  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
@@ -124,7 +130,6 @@ export const TimeMachineProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [nextEra, prevEra, viewMode, bootEra]);
 
-  // Auto evolution loop
   useEffect(() => {
     if (!isAutoPlaying) return;
     const interval = setInterval(() => {
@@ -167,6 +172,12 @@ export const TimeMachineProvider: React.FC<{ children: React.ReactNode }> = ({ c
         setOpenGraveyard,
         openSurprise,
         setOpenSurprise,
+        openDevTools,
+        setOpenDevTools,
+        openTimeCapsule,
+        setOpenTimeCapsule,
+        openAudioVault,
+        setOpenAudioVault,
       }}
     >
       {children}
